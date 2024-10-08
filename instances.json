@@ -153,6 +153,13 @@
       "i2p": null,
       "country": "DE",
       "librey": true
+    },
+    {
+      "clearnet": "https://search.exitt.store/",
+      "tor": "http://exittcb4fi3jtpnmkjljekgd2liydrzfg36h3dp5lnpngdui5ddoefad.onion/",
+      "i2p": null,
+      "country": "DE",
+      "librey": true
     }
   ]
 }
