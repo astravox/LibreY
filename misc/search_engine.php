@@ -159,11 +159,6 @@ function fetch_search_results($opts, $do_print) {
 
     $results = $search_category->get_results();
 
-    if (empty($results)) {
-        require_once "engines/librex/fallback.php";
-        $results = get_librex_results($opts);
-    }
-
     if (!$do_print || empty($results)) return $results;
 
     print_elapsed_time(microtime(true), $results, $opts);
