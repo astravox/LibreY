@@ -1,5 +1,5 @@
 <div class="footer-container">
-    <a href="./">LibreY</a>
+    <a href="./">LibreZ</a>
     <a href="https://github.com/astravox/LibreZ" target="_blank"><?php printtext("source_code_link");?></a>
     <a Only this one for now.</a>
     <a href="./settings.php"><?php printtext("settings_link");?></a>
