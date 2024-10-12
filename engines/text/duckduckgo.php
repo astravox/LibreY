@@ -2,7 +2,6 @@
     class DuckDuckGoRequest extends EngineRequest {
         public function get_request_url() {
             $query_encoded = str_replace("%22", "\"", urlencode($this->query));
-            $results = array();
 
             $domain = 'com';
             $results_language = $this->opts->language;
@@ -10,10 +9,10 @@
 
             $url = "https://html.duckduckgo.$domain/html/?q=$query_encoded&kd=-1&s=" . 3 * $this->page;
 
-            if (3 > strlen($results_language) && 0 < strlen($results_language))
+            if (strlen($results_language) > 0 && strlen($results_language) < 3)
                 $url .= "&lr=lang_$results_language";
 
-            if (3 > strlen($number_of_results) && 0 < strlen($number_of_results))
+            if (strlen($number_of_results) > 0 && strlen($number_of_results) < 3)
                 $url .= "&num=$number_of_results";
 
             if (isset($_COOKIE["safe_search"]))
@@ -26,39 +25,45 @@
             $results = array();
             $xpath = get_xpath($response);
 
-            if (!$xpath)
+            if (!$xpath) {
+                error_log("Failed to parse DuckDuckGo response: Invalid XPath.");
                 return $results;
+            }
 
-            foreach($xpath->query("/html/body/div[1]/div[". count($xpath->query('/html/body/div[1]/div')) ."]/div/div/div[contains(@class, 'web-result')]/div") as $result) {
-                $url = $xpath->evaluate(".//h2[@class='result__title']//a/@href", $result)[0];
+            $result_elements = $xpath->query("/html/body/div[1]/div[". count($xpath->query('/html/body/div[1]/div')) ."]/div/div/div[contains(@class, 'web-result')]/div");
+            
+            if (!$result_elements || $result_elements->length == 0) {
+                error_log("No results found in DuckDuckGo response.");
+                return $results;
+            }
 
-                if ($url == null)
-                    continue;
+            foreach ($result_elements as $result) {
+                $url_node = $xpath->evaluate(".//h2[@class='result__title']//a/@href", $result)[0];
 
-                if (!empty($results)) { // filter duplicate results
-                    if (end($results)["url"] == $url->textContent)
-                        continue;
+                if ($url_node === null) continue;
+
+                $url = $url_node->textContent;
+
+                // Check for duplicate URLs
+                if (!empty($results)) {
+                    if (end($results)["url"] == $url) continue;
                 }
 
-                $url = $url->textContent;
+                $title_node = $xpath->evaluate(".//h2[@class='result__title']", $result)[0];
+                $description_node = $xpath->evaluate(".//a[@class='result__snippet']", $result)[0];
 
-                $title = $xpath->evaluate(".//h2[@class='result__title']", $result)[0];
-                $description = $xpath->evaluate(".//a[@class='result__snippet']", $result)[0];
+                $title = $title_node !== null ? htmlspecialchars($title_node->textContent) : TEXTS["result_no_title"];
+                $description = $description_node !== null ? htmlspecialchars($description_node->textContent) : TEXTS["result_no_description"];
 
-                array_push($results,
-                    array (
-                        "title" => htmlspecialchars($title->textContent),
-                        "url" =>  htmlspecialchars($url),
-                        // base_url is to be removed in the future, see #47
-                        "base_url" => htmlspecialchars(get_base_url($url)),
-                        "description" =>  $description == null ?
-                                          TEXTS["result_no_description"] :
-                                          htmlspecialchars($description->textContent)
-                    )
-                );
-           }
-           return $results;
+                array_push($results, array(
+                    "title" => $title,
+                    "url" => htmlspecialchars($url),
+                    "base_url" => htmlspecialchars(get_base_url($url)),
+                    "description" => $description
+                ));
+            }
+
+            return $results;
         }
-
     }
 ?>
