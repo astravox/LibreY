@@ -1,13 +1,12 @@
 <?php
     function get_base_url($url) {
         $parsed = parse_url($url);
-
-        if (isset($parsed["scheme"]) && isset($parsed["host"]) && !empty($parsed["scheme"]) && !empty($parsed["host"])) {
-            return $parsed["scheme"] . "://" . $parsed["host"] . "/";
-        } else {
-			logStackTrace();
-            return "";
+        if (isset($parsed["scheme"], $parsed["host"]) && !empty($parsed["scheme"]) && !empty($parsed["host"])) {
+            return "{$parsed["scheme"]}://{$parsed["host"]}/";
         }
+        logStackTrace();
+        return "";
+    } 
     }
 
 
@@ -17,29 +16,36 @@
 
     function try_replace_with_frontend($url, $frontend, $original, $opts) {
         $frontends = $opts->frontends;
+        if (!array_key_exists($frontend, $frontends)) {
+            return $url;
+        }
+        $frontend_url = trim($frontends[$frontend]["instance_url"]);
+        if (empty($frontend_url)) {
+            return $url;
+        }
 
-        if (array_key_exists($frontend, $opts->frontends)) {
-            $frontend = $frontends[$frontend]["instance_url"];
+        switch (true) {
+            case strpos($url, "wikipedia.org") !== false:
+                $lang = strtok(parse_url($url, PHP_URL_HOST), '.');
+                return "$frontend_url" . str_replace($original, '', parse_url($url, PHP_URL_PATH)) . "?lang=$lang";
 
-            if (empty(trim($frontend)))
-                return $url;
+            case strpos($url, "fandom.com") !== false:
+                $wiki_name = strtok(parse_url($url, PHP_URL_HOST), '.');
+                return "$frontend_url/$wiki_name" . str_replace($original, '', parse_url($url, PHP_URL_PATH));
 
-            if (strpos($url, "wikipedia.org") !== false) {
-                $wiki_split = explode(".", $url);
-                if (count($wiki_split) > 1) {
-                    $lang = explode("://", $wiki_split[0])[1];
-                    $url =  $frontend . explode($original, $url)[1] . (strpos($url, "?") !== false ? "&" : "?")  . "lang=" . $lang;
-                }
-            } else if (strpos($url, "fandom.com") !== false) {
-                $fandom_split = explode(".", $url);
-                if (count($fandom_split) > 1) {
-                    $wiki_name = explode("://", $fandom_split[0])[1];
-                    $url =  $frontend . "/" . $wiki_name . explode($original, $url)[1];
-                }
-            } else if (strpos($url, "gist.github.com") !== false) {
-                $gist_path = explode("gist.github.com", $url)[1];
-                $url = $frontend . "/gist" . $gist_path;
-            } else if (strpos($url, "stackexchange.com") !== false) {
+            case strpos($url, "gist.github.com") !== false:
+                return "$frontend_url/gist" . str_replace('gist.github.com', '', parse_url($url, PHP_URL_PATH));
+
+            case strpos($url, "stackexchange.com") !== false:
+                $se_domain = strtok(parse_url($url, PHP_URL_HOST), '.');
+                return "$frontend_url/exchange/$se_domain" . str_replace('stackexchange.com', '', parse_url($url, PHP_URL_PATH));
+
+            default:
+                return "$frontend_url" . str_replace($original, '', parse_url($url, PHP_URL_PATH));
+        }
+    }
+            
+             else if (strpos($url, "stackexchange.com") !== false) {
                 $se_domain = explode(".", explode("://", $url)[1])[0];
                 $se_path = explode("stackexchange.com", $url)[1];
                 $url = $frontend . "/exchange" . "/" . $se_domain . $se_path;
@@ -64,10 +70,7 @@
             if (strpos($url, $original)) {
                 $url = try_replace_with_frontend($url, $frontend, $original, $opts);
                 break;
-            } else if (strpos($url, "stackexchange.com")) {
-                $url = try_replace_with_frontend($url, "anonymousoverflow", "stackexchange.com", $opts);
-                break;
-            }
+            
         }
 
         return $url;
@@ -87,8 +90,10 @@
     function request($url, $conf) {
         $ch = curl_init($url);
         curl_setopt_array($ch, $conf);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        copy_cookies($ch);
         $response = curl_exec($ch);
-
+        curl_close($ch);
         return $response;
     }
 
@@ -125,8 +130,9 @@
     }
 
     function copy_cookies($curl) {
-        if (array_key_exists("HTTP_COOKIE", $_SERVER))
-            curl_setopt( $curl, CURLOPT_COOKIE, $_SERVER['HTTP_COOKIE'] );
+        if (isset($_SERVER['HTTP_COOKIE'])) {
+            curl_setopt($curl, CURLOPT_COOKIE, $_SERVER['HTTP_COOKIE']);
+        }
     }
 
     

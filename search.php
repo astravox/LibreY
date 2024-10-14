@@ -34,6 +34,7 @@
     <body>
         <form class="sub-search-container" method="get" autocomplete="off">
             <h1 class="logomobile"><a class="no-decoration" href="./">Libre<span class="Y">Z</span></a></h1>
+            <br>
             <input type="text" name="q"
                 <?php
                     if (1 > strlen($opts->query) || strlen($opts->query) > 256)

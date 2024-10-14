@@ -4,7 +4,7 @@
     // Feel free to add your donation options here, but please don't remove mine.
 ?>
 
-    <title>LibreY - Donate</title>
+    <title>LibreZ- Donate</title>
     </head>
     <body>
     <div class="donate-container">
@@ -46,22 +46,21 @@
 
         <!-- librey dev -->
       <h2>
-<?php printftext("donate_fork", "Libre<span class=\"Y\">X</span>")?>
+<?php printftext("donate_fork", "Libre<span class=\"Y\">Z</span>")?>
       </h2>
 
         <div class="qr-box">
           <div class="inner-wrap">
-            <h3>Monero [XMR]</h3>
+            <h3>NO donations atm</h3>
               <p>
-                4ArntPzKpu32s4z2XqYhyaY1eUeUBKtCzJqEqxWtF5mCi5vR6sdhh32Hd2fk9FjeUxYDtaaUexUqoRNxrgfrtuXs4XpgMNJ
               </p>
           </div>
-          <img
+          <!--<img
             src="static/images/xmr-ahwx.png"
             height="160"
             width="160"
             alt="xmr qr code (ahwx)"
-          />
+          />-->
         </div>
           
         <div class="flex-row">

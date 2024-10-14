@@ -23,18 +23,12 @@ body {
     align-items: center;
 }
 
-input,
 button {
     outline: none;
     font-family: inherit;
     transition: all 0.3s ease;
 }
 
-input {
-    text-align: left;
-    margin-left: 140px;
-    
-}
 
 button {
     cursor: pointer;
@@ -86,10 +80,13 @@ a:hover,
 
 .search-container {
     text-align: center;
-    margin-top: 10vh;
+    margin-top: 15vh;
     width: 100%;
     padding: 0 20px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .search-container h1 {
@@ -98,6 +95,9 @@ a:hover,
     color: var(--main-fg);
     text-shadow: 4px 6px 12px rgba(0, 0, 0, 0.5);
     padding-bottom: 20px;
+    margin-bottom: 20px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .search-container input,
@@ -113,7 +113,9 @@ a:hover,
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     transition: border-color 0.4s ease, box-shadow 0.4s ease;
     margin-bottom: 20px;
-    margin-left: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .search-container input:focus,
@@ -194,10 +196,15 @@ a:hover,
 .sub-search-button-wrapper {
     display: flex;
     justify-content: center;
-    gap: 25px;
-    margin: 20px auto;
-    padding: 10px;   
-    border-radius: 10px;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    gap: 10px;
 }
 
 .sub-search-button-wrapper i {
@@ -209,7 +216,7 @@ a:hover,
     text-align: center;
     border: none;
     background-color: inherit;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
@@ -229,7 +236,8 @@ a:hover,
 .sub-search-button-wrapper img {
     vertical-align: middle;
     margin-right: 5px;
-    width: 20px;
+    width: 25px;
+    height: auto;
 }
 
 .misc-container {
@@ -422,6 +430,9 @@ a[title] {
 
 .hide {
     display: none;
+    opacity: 0%;
+    width: 0px;
+    height: 0px;
 }
 
 .Y {
@@ -504,33 +515,49 @@ hr.small-line {
 
 /* mobile view */
 @media only screen and (max-width: 750px) {
+    .no-decoration {
+        margin-bottom: 20px;
+    }
+    
+    .search-container {
+        margin-top: 10vh;
+        padding: 0 10px;
+        box-sizing: border-box;
+        text-align: center;
+        align-items: center;
+        width: 100%;
+    }
+    .search-container input {
+        width: 20%;
+        margin: 0 auto;
+        padding: 4px;
+        box-sizing: border-box;
+        border-radius: 4px;
+        text-align: center;
+    }
+    .sub-search-button-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: 20px auto;
+        gap: 5px;
+        padding: 0;
+        width: 100%;
+    }
+    .sub-search-button-wrapper a {
+        font-size: 12px;
+        padding: 5px;
+        text-align: center;
+    }
     p {
         font-size: 16px;
+        text-align: center;
     }
 
     html {
         font-size: 14px;
     }
-
-    .search-container input {
-    width: 100%;
-    max-width: 600px;
-    color: var(--search-container-text-color);
-    background-color: var(--search-container-background-color);
-    padding: 20px;
-    font-size: inherit;
-    border: 1px solid var(--search-container-background-border);
-    border-radius: 30px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    transition: border-color 0.4s ease, box-shadow 0.4s ease;
-    margin-bottom: 20px;
-}
-
-@media only screen and (max-width: 750px) {
-    .search-container input {
-        margin-left: 10px;
-    }
-}
 
     .search-button-wrapper button {
         display: block;
@@ -539,18 +566,20 @@ hr.small-line {
     }
     
     .input {
-        margin-left: 0px;
-        margin: 0px;
+        margin-top: 10px;
+        width: 20%;
+        text-align: center;
     }
 
     .image-result-container {
         display: block;
-        margin: 0;
+        margin: 0 auto;
         padding: 0;
+        text-align: center;
     }
 
     .image-result-container img {
-        margin: 0 5% 5% 5%;
+        margin: 0 auto;
         padding: 0;
         width: 90%;
         border: none;
@@ -562,11 +591,11 @@ hr.small-line {
 
     .footer-container a {
         margin: 10px;
+        text-align: center;
     }
 
     .sub-search-container {
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
         text-align: center;
     }
 
@@ -579,51 +608,36 @@ hr.small-line {
         margin: 10px auto;
         font-size: 28px;
         display: block;
+        text-align: center;
     }
 
     .sub-search-container input {
-        width: 95%;
+        margin-top: 10px;
+        width: 80%;
+        text-align: center;
     }
 
     .sub-search-button-wrapper {
-        display: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+        width: 90%;
+        margin-top: 10px;
     }
 
     .hamburger-menu {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 201;
-        background: #ff79c6;
-        color: #fff;
-        padding: 15px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        transition: background 0.3s ease;
-    }
-
-    .hamburger-menu:hover {
-        background: #bd93f9;
+        display: none;
     }
 
     .sub-search-button-wrapper.open {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    padding: 10px;
-    position: fixed;
-    top: 60px;
-    right: 20px;
-    width: 80%;
-    max-width: 300px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    z-index: 200;
-}
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-radius: 10px;
+        padding: 10px;
+        width: 100%;
+    }
 
     .sub-search-button-wrapper a {
         font-size: 14px;
@@ -641,10 +655,10 @@ hr.small-line {
 
     .special-result-container {
         position: relative;
-        float: none;
         max-width: 95%;
         margin: 10px auto;
         width: auto;
+        text-align: center;
     }
 
     .special-result-container img {
@@ -654,59 +668,49 @@ hr.small-line {
     .misc-container {
         margin-bottom: 200px;
         width: 95%;
+        text-align: center;
     }
 
     .search-container h1 {
         font-size: 45px;
-    }
-
-    .search-container {
-        margin-top: 15vh;
+        text-align: center;
     }
 
     .text-result-container,
     #time,
     .next-page-button-wrapper {
-        margin-left: 20px;
+        margin: 0 auto;
         max-width: 95%;
+        text-align: center;
     }
 
     .next-page-button-wrapper {
         margin-top: 30px;
     }
 
-    .text-result-container,
-    #time,
-    .next-page-button-wrapper,
-    .did-you-mean {
-        margin-left: 20px;
-    }
-
-    .donate-container {
-        margin-bottom: 100px;
-        width: 95%;
-        text-align: center;
-    }
-
     .qr-box {
         flex-direction: column;
         align-items: center;
+        text-align: center;
     }
 
     .qr-box img {
         width: 40%;
         height: auto;
         padding: 20px;
+        text-align: center;
     }
 
     .flex-row {
         flex-direction: column;
         align-items: center;
         gap: 5px;
+        text-align: center;
     }
 
     .flex-row a img {
         width: 220px;
         height: auto;
+        text-align: center;
     }
 }
